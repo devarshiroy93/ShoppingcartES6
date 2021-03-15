@@ -54,35 +54,47 @@ var createProductList = function createProductList() {
 };
 
 var createNewItemInCart = function createNewItemInCart(item) {
-  var actualPrice = item.actualPrice,
+  var itemPrice = item.itemPrice,
       imageUrl = item.imageUrl,
-      name = item.name;
-  var template = " <div class=\"cart-body\">\n    <div class=\"cart-item-holder\">\n        <div class=\"cart-item\">\n            <div class=\"cart-item-name-img-holder\">\n                <img class=\"cart-item-image\"\n                    src=\"".concat(imageUrl, "\" />\n                <p>").concat(name, "</p>\n            </div>\n            <div class=\"item-quantity-holder\">\n                <button class=\"increaseItemCountBtn\">+</button>\n                <p>1</p>\n                <button class=\"decreaseItemCountBtn\">-</button>\n            </div>\n            \n            <p>").concat(actualPrice, "</p>\n        </div>\n    </div>\n</div>");
+      name = item.name,
+      quantity = item.quantity;
+  var template = " <div id= \"cart-body\"class=\"cart-body\">\n    <div class=\"cart-item-holder\">\n        <div class=\"cart-item\">\n            <div class=\"cart-item-name-img-holder\">\n                <img class=\"cart-item-image\"\n                    src=\"".concat(imageUrl, "\" />\n                <p>").concat(name, "</p>\n            </div>\n            <div class=\"item-quantity-holder\">\n                <button class=\"increaseItemCountBtn\">+</button>\n                <p>").concat(quantity, "</p>\n                <button class=\"decreaseItemCountBtn\">-</button>\n            </div>\n            \n            <p>$").concat(itemPrice, "</p>\n        </div>\n    </div>\n</div>");
   return template;
 };
 
 var createdCart = null;
-var createCartBody = function createCartBody(item) {
-  var template = createNewItemInCart(item);
+var createCartBody = function createCartBody() {
+  removePreviousCartBody();
+  var template = "";
+  var allItems = createdCart.getAllItems();
+  allItems.forEach(function (i) {
+    template += createNewItemInCart(i);
+  });
   document.getElementById('cart').insertAdjacentHTML('beforeend', template);
 };
 
 var handleAddToCartClick = function handleAddToCartClick(event) {
   console.log('add', event);
   var price = event.target.parentElement.children[1].innerText;
+  var displayPrice = event.target.parentElement.children[0].innerText;
   var name = event.target.parentElement.parentElement.children[0].children[0].innerText;
   var img = event.target.parentElement.parentElement.parentElement.children[1].src;
+  var discount = Number(event.target.parentElement.parentElement.parentElement.children[0].innerText.replace('% off', ''));
   var quantity = 1;
-  var newCartItem = new _Item__WEBPACK_IMPORTED_MODULE_0__.default(name, img, 0, price, 0, quantity);
-  createCartBody(newCartItem);
+  var newCartItem = new _Item__WEBPACK_IMPORTED_MODULE_0__.default(name, img, displayPrice, price, discount, quantity);
   addItemToCart(newCartItem);
+  createCartBody(newCartItem);
   bindIncreaseAndDecreaseItemCount();
+  document.getElementById('empty-card-banner').style.display = "none";
 };
 
 var createNewCart = function createNewCart(item) {
   var newCart = new _Cart__WEBPACK_IMPORTED_MODULE_1__.default([], 0);
-  newCart.addItem(item);
   createdCart = newCart;
+};
+
+var addItemInCart = function addItemInCart(item) {
+  createdCart.addItem(item);
 };
 
 var addItemToCart = function addItemToCart(item) {
@@ -92,15 +104,19 @@ var addItemToCart = function addItemToCart(item) {
     });
 
     if (!!selectedItem) {
-      createdCart.updateItemQuantity(item.name);
+      createdCart.updateItemQuantity(item.name, 'increment');
     } else {
-      createNewCart(item);
+      addItemInCart(item);
     }
 
     ;
   } else {
     createNewCart(item);
+    addItemInCart(item);
   }
+
+  var billDetails = createdCart.getCartPriceDetails();
+  createBillSection(billDetails);
 };
 
 var bindAddToCartClick = function bindAddToCartClick() {
@@ -113,20 +129,52 @@ var increaseItemCount = function increaseItemCount(event) {
   var productName = event.target.parentElement.parentElement.children[0].children[1].innerText;
   createdCart.updateItemQuantity(productName, 'increment');
   console.log('increase item count');
-  console.log('cart total', createdCart.getTotal());
+  console.log('cart total', createdCart.getCartPriceDetails());
+  removePreviousCartBody();
+  createCartBody();
+  bindIncreaseAndDecreaseItemCount();
+  var billDetails = createdCart.getCartPriceDetails();
+  createBillSection(billDetails);
 };
 
-var decreaseItemCount = function decreaseItemCount() {
-  console.log('decrease item count');
+var decreaseItemCount = function decreaseItemCount(event) {
+  var productName = event.target.parentElement.parentElement.children[0].children[1].innerText;
+
+  if (Number(event.target.parentElement.children[1].innerText) === 1) {
+    createdCart.removeItemFromCart(productName);
+    document.getElementById('empty-card-banner').style.display = "block";
+  } else {
+    createdCart.updateItemQuantity(productName, 'decrement');
+  }
+
+  console.log('increase item count');
+  console.log('cart total', createdCart.getTotal());
+  removePreviousCartBody();
+  createCartBody();
+  var billDetails = createdCart.getCartPriceDetails();
+  createBillSection(billDetails);
+  bindIncreaseAndDecreaseItemCount();
 };
 
 var bindIncreaseAndDecreaseItemCount = function bindIncreaseAndDecreaseItemCount() {
   Array.from(document.getElementsByClassName('increaseItemCountBtn')).forEach(function (el) {
     el.addEventListener('click', increaseItemCount, false);
   });
-  Array.from(document.getElementsByClassName('increaseItemCountBtn')).forEach(function (el) {
+  Array.from(document.getElementsByClassName('decreaseItemCountBtn')).forEach(function (el) {
     el.addEventListener('click', decreaseItemCount, false);
   });
+};
+
+var removePreviousCartBody = function removePreviousCartBody() {
+  !!document.getElementById('cart-body') ? Array.from(document.getElementsByClassName('cart-body')).forEach(function (el) {
+    el.remove();
+  }) : '';
+};
+
+var createBillSection = function createBillSection(billDetails) {
+  !!document.getElementById('bill-section-container').children.length > 0 ? document.getElementById('bill-section').remove() : '';
+  var template = " <div class=\"bill-section\" id=\"bill-section\">\n    Total\n    <div class= \"bill-section-card\">\n        <div>\n            <p>Items(".concat(billDetails.totalNumberOfItems, ")</p>\n            <p>Discount</p>\n            <p>Type Discount</p>\n        </div>\n        <div>\n            <p>$").concat(billDetails.totalPrice, "</p>\n            <p>-$").concat(billDetails.totalDiscount, "</p>\n            <p>-$0</p>\n        </div>\n        \n    </div>\n    <div class=\"order-total\">\n        <div>\n            Order Total \n        </div>\n        <div>\n            951$\n        </div>\n    </div>\n</div>");
+  document.getElementById('bill-section-container').insertAdjacentHTML('beforeend', template);
 };
 
 /***/ }),
@@ -178,7 +226,8 @@ var Cart = /*#__PURE__*/function () {
         this.items = this.items.map(function (i) {
           if (selectedItem.name.toLowerCase() === i.name.toLowerCase()) {
             return _objectSpread(_objectSpread({}, i), {}, {
-              quantity: i.quantity += 1
+              quantity: action === 'increment' ? i.quantity += 1 : i.quantity -= 1,
+              itemPrice: Number(i.actualPrice.replace('$', '')) * i.quantity
             });
           } else {
             return _objectSpread({}, i);
@@ -187,19 +236,41 @@ var Cart = /*#__PURE__*/function () {
       }
     }
   }, {
-    key: "removeItem",
-    value: function removeItem() {//TBD method logic
-    }
-  }, {
-    key: "getItem",
-    value: function getItem() {//TBD method logic
-    }
-  }, {
     key: "getTotal",
     value: function getTotal() {
       return this.items.reduce(function (acc, obj) {
         return acc + Number(obj.actualPrice.replace('$', '')) * Number(obj.quantity);
       }, 0);
+    }
+  }, {
+    key: "getAllItems",
+    value: function getAllItems() {
+      return this.items.slice();
+    }
+  }, {
+    key: "removeItemFromCart",
+    value: function removeItemFromCart(productName) {
+      this.items = this.items.filter(function (i) {
+        return i.name.toLowerCase() !== productName.toLowerCase();
+      });
+    }
+  }, {
+    key: "getCartPriceDetails",
+    value: function getCartPriceDetails() {
+      var totalNumberOfItems = this.items.reduce(function (acc, obj) {
+        return acc + Number(obj.quantity);
+      }, 0);
+      var totalPrice = this.items.reduce(function (acc, obj) {
+        return acc + Number(obj.actualPrice.replace('$', '')) * Number(obj.quantity);
+      }, 0);
+      var totalDiscount = this.items.reduce(function (acc, obj) {
+        return acc + Number(obj.displayPrice.replace('$', '')) * Number(obj.quantity);
+      }, 0) - totalPrice;
+      return {
+        totalNumberOfItems: totalNumberOfItems,
+        totalPrice: totalPrice,
+        totalDiscount: totalDiscount
+      };
     }
   }]);
 
@@ -236,6 +307,7 @@ var Item = function Item(name, imageUrl) {
   this.actualPrice = actualPrice;
   this.discount = discount;
   this.quantity = quantity;
+  this.itemPrice = Number(actualPrice.replace('$', '')) * quantity;
 };
 
 
@@ -333,13 +405,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles.scss */ "./src/styles.scss");
 /* harmony import */ var _cart_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./cart.scss */ "./src/cart.scss");
 
- //import {bindAddToCartClick} from './App';
 
 
-
-console.log('ES6 schopping cart');
-(0,_App__WEBPACK_IMPORTED_MODULE_0__.createProductList)(); //createCartBody();
-//bindAddToCartClick();
+(0,_App__WEBPACK_IMPORTED_MODULE_0__.createProductList)();
 })();
 
 /******/ })()

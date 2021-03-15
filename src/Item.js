@@ -6,5 +6,6 @@ export default class Item{
         this.actualPrice = actualPrice;
         this.discount = discount;
         this.quantity = quantity;
+        this.itemPrice =  Number(actualPrice.replace('$','')) * quantity;
     }
 }
