@@ -1,0 +1,77 @@
+.container{
+    .header{
+        display : flex;
+        height : 3rem;
+        background-color: mediumpurple
+    }
+    .main-section {
+        display : flex;
+        .card-container{
+            display:flex;
+            flex-wrap: wrap;
+            width:70%;
+            .card{
+                padding: 1rem;
+                margin: 1rem;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                text-align:center;
+                .product-image{
+                    height:11rem;
+                    width: auto;
+                    margin-top: 1rem;
+                }
+                .discount-badge{
+                    padding: 0.3rem;
+                    background-color: lightgreen;
+                    width: fit-content;
+                    border-radius: 3px;
+                    margin: -1rem;
+                };
+    
+                .card-details-section{
+                    background-color: #ccc;
+                    margin-left: -1rem;
+                    padding: 0.5rem;
+                    margin-right: -1rem;
+                    margin-bottom: -1rem;
+                    .item-name{
+                        margin : 0.5rem;
+                        margin-left: -5.7rem;
+                    };
+                    .item-prices-container{
+                        display: flex;
+                        justify-content: space-between;
+                        p{
+                            margin : 0.5rem
+                        }
+                        .display-price{
+                            text-decoration: line-through;
+                            color: #e2e1e1;
+                            font-size: 0.8rem;
+                        }
+                        .actual-price{
+                            font-weight: bold
+                        }
+                        button{
+                             background-color: mediumpurple; 
+                             border: none;
+                             color: white;
+                             padding: 0rem 0.5rem;
+                             text-align: center;
+                             text-decoration: none;
+                             display: inline-block;
+                             font-size: 0.8rem;
+                             border-radius: 3px;
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+}
+
+body{
+    margin:0;
+}

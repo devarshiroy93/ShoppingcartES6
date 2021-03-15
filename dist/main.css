@@ -1,0 +1,129 @@
+.container .header {
+  display: flex;
+  height: 3rem;
+  background-color: mediumpurple;
+}
+.container .main-section {
+  display: flex;
+}
+.container .main-section .card-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 70%;
+}
+.container .main-section .card-container .card {
+  padding: 1rem;
+  margin: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+.container .main-section .card-container .card .product-image {
+  height: 11rem;
+  width: auto;
+  margin-top: 1rem;
+}
+.container .main-section .card-container .card .discount-badge {
+  padding: 0.3rem;
+  background-color: lightgreen;
+  width: fit-content;
+  border-radius: 3px;
+  margin: -1rem;
+}
+.container .main-section .card-container .card .card-details-section {
+  background-color: #ccc;
+  margin-left: -1rem;
+  padding: 0.5rem;
+  margin-right: -1rem;
+  margin-bottom: -1rem;
+}
+.container .main-section .card-container .card .card-details-section .item-name {
+  margin: 0.5rem;
+  margin-left: -5.7rem;
+}
+.container .main-section .card-container .card .card-details-section .item-prices-container {
+  display: flex;
+  justify-content: space-between;
+}
+.container .main-section .card-container .card .card-details-section .item-prices-container p {
+  margin: 0.5rem;
+}
+.container .main-section .card-container .card .card-details-section .item-prices-container .display-price {
+  text-decoration: line-through;
+  color: #e2e1e1;
+  font-size: 0.8rem;
+}
+.container .main-section .card-container .card .card-details-section .item-prices-container .actual-price {
+  font-weight: bold;
+}
+.container .main-section .card-container .card .card-details-section .item-prices-container button {
+  background-color: mediumpurple;
+  border: none;
+  color: white;
+  padding: 0rem 0.5rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.8rem;
+  border-radius: 3px;
+}
+
+body {
+  margin: 0;
+}
+.cart-conatainer {
+  width: 27%;
+}
+.cart-conatainer .cart .cart-header {
+  background-color: #f5f5f5;
+  margin: 1rem;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  padding: 0.4rem;
+  border-radius: 3px;
+}
+.cart-conatainer .cart .cart-header .cart-header-item {
+  display: flex;
+  justify-content: space-between;
+}
+.cart-conatainer .cart .cart-header .cart-header-price-quantity {
+  display: flex;
+}
+.cart-conatainer .cart .cart-header .cart-header-price-quantity .cart-header-quantity {
+  margin-right: 25px;
+}
+.cart-conatainer .cart .cart-body {
+  margin: 1rem;
+}
+.cart-conatainer .cart .cart-body .cart-item {
+  display: flex;
+  margin-top: 1rem;
+}
+.cart-conatainer .cart .cart-body .cart-item .cart-item-name-img-holder {
+  display: flex;
+  margin-right: 4rem;
+}
+.cart-conatainer .cart .cart-body .cart-item .cart-item-name-img-holder .cart-item-image {
+  height: 4rem;
+  width: 3rem;
+}
+.cart-conatainer .cart .cart-body .cart-item .cart-item-name-img-holder p {
+  padding-left: 1rem;
+}
+.cart-conatainer .cart .cart-body .cart-item .item-quantity-holder {
+  display: flex;
+  margin-right: 0.8rem;
+}
+.cart-conatainer .cart .cart-body .cart-item .item-quantity-holder p {
+  padding: 0.5rem;
+}
+.cart-conatainer .cart .cart-body .cart-item .item-quantity-holder button {
+  background-color: white;
+  border: 1px solid black;
+  height: 3rem;
+  width: 2rem;
+  border-radius: 3px;
+}
+
+/*# sourceMappingURL=main.css.map*/
